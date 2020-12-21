@@ -148,12 +148,14 @@ const write = async (name, data) => {
 
 const main = async () => {
   checks: {
+    debug("process.env.npm_package_json:", process.env.npm_package_json)
+    debug("process.env.PWD:", process.env.PWD)
+
     if (process.env.npm_package_json && /\bpackage\.json$/i.test(process.env.npm_package_json)) {
       // for NPM >= 7
       try {
         // read the package info
 
-        debug("process.env.npm_package_json:", process.env.npm_package_json)
 
         const pkg = JSON.parse(await fsp.readFile(process.env.npm_package_json));
         // populate necessary environment variables locally
