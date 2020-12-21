@@ -2,7 +2,7 @@
 
 'use strict';
 
-const {promises: fsp} = require('fs');
+const {promises: fsp, existsSync} = require('fs');
 const path = require('path');
 const zlib = require('zlib');
 const {promisify} = require('util');
@@ -147,10 +147,15 @@ const write = async (name, data) => {
 };
 
 const main = async () => {
-  checks: {
-    debug("process.env.npm_package_json:", process.env.npm_package_json)
-    debug("process.env.PWD:", process.env.PWD)
+  debug("process.env.npm_package_json:", process.env.npm_package_json)
+  debug("process.env.PWD:", process.env.PWD)
 
+  const pwd_package_json = path.join(process.env.PWD, "package.json")
+  debug("PWD + package.json:", pwd_package_json, "exists:", existsSync(pwd_package_json) )
+
+  debug("(before) process.env.npm_package_github:", process.env.npm_package_github)
+
+  checks: {
     if (process.env.npm_package_json && /\bpackage\.json$/i.test(process.env.npm_package_json)) {
       // for NPM >= 7
       try {
@@ -171,8 +176,7 @@ const main = async () => {
       }
     }
 
-    debug("process.env.npm_package_github:", process.env.npm_package_github)
-    debug("artifactPath:", artifactPath)
+    debug("(after) process.env.npm_package_github:", process.env.npm_package_github)
 
     if (!artifactPath) {
       console.log('No artifact path was specified with --artifact.');
