@@ -9,6 +9,10 @@ const {promisify} = require('util');
 const https = require('https');
 const {exec, spawnSync} = require('child_process');
 
+function debug(...args) {
+  console.log("[DEBUG] [install-artifact-from-github] ", ...args)
+}
+
 const spawnOptions = {encoding: 'utf8', env: process.env};
 const getPlatform = () => {
   const platform = process.platform;
@@ -35,6 +39,12 @@ const artifactPath = getParam('artifact'),
   suffix = getParam('suffix'),
   mirrorHost = getParam('host'),
   mirrorEnvVar = getParam('host-var') || 'DOWNLOAD_HOST';
+
+debug('artifactPath:', artifactPath)
+debug('prefix:', prefix)
+debug('suffix:', suffix)
+debug('mirrorHost:', mirrorHost)
+debug('mirrorEnvVar:', mirrorEnvVar)
 
 const parseUrl = [
   /^(?:https?|git|git\+ssh|git\+https?):\/\/github.com\/([^\/]+)\/([^\/\.]+)(?:\/|\.git\b|$)/i,
@@ -142,6 +152,9 @@ const main = async () => {
       // for NPM >= 7
       try {
         // read the package info
+
+        debug("process.env.npm_package_json:", process.env.npm_package_json)
+
         const pkg = JSON.parse(await fsp.readFile(process.env.npm_package_json));
         // populate necessary environment variables locally
         process.env.npm_package_github = pkg.github || '';
@@ -155,6 +168,10 @@ const main = async () => {
         break checks;
       }
     }
+
+    debug("process.env.npm_package_github:", process.env.npm_package_github)
+    debug("artifactPath:", artifactPath)
+
     if (!artifactPath) {
       console.log('No artifact path was specified with --artifact.');
       break checks;
