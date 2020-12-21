@@ -13,6 +13,11 @@ function debug(...args) {
   console.log("[DEBUG] [install-artifact-from-github] ", ...args)
 }
 
+
+
+debug("process.env on the top of bin/install-from-cache.js: " + JSON.stringify(process.env) )
+
+
 const spawnOptions = {encoding: 'utf8', env: process.env};
 const getPlatform = () => {
   const platform = process.platform;
@@ -45,6 +50,7 @@ debug('prefix:', prefix)
 debug('suffix:', suffix)
 debug('mirrorHost:', mirrorHost)
 debug('mirrorEnvVar:', mirrorEnvVar)
+
 
 const parseUrl = [
   /^(?:https?|git|git\+ssh|git\+https?):\/\/github.com\/([^\/]+)\/([^\/\.]+)(?:\/|\.git\b|$)/i,
